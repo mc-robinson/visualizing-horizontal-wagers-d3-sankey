@@ -19,7 +19,8 @@ with open(ticket_csv_filename,'r') as ticket_file:
     ticket_data = ticket_file.readlines()
 
 # this might be a error prone way to get race number
-first_race_number = int(ticket_data[0].split(',')[-5])
+#print(ticket_data[0])
+first_race_number = int(ticket_data[0].split(',')[-4]) # change this
 
 individual_tickets_list = [] # this will be a list of lists
 for line in ticket_data:
@@ -104,12 +105,22 @@ for race in race_winners_dict:
         winners_list.append(winning_pn)
     else:
         winners_list.append('')
-        
-status_str = 'BUST'
+
+
+alive_tickets_count=0   
+next_race_alive_tickets=[]   
+alive = False
 for ticket in individual_tickets_list:
-    if winners_list[0:(last_race-first_race_number+1)] == ticket:
-        status_str = 'ALIVE'
-        break
+    winners_list_to_check = [str(x) for x in winners_list[0:(last_race-first_race_number+1)]]
+    if winners_list_to_check == ticket[0:(last_race-first_race_number+1)]:
+        alive = True
+        alive_tickets_count += 1
+        next_race_alive_tickets.append(int(ticket[(last_race-first_race_number+1)]))
+
+if alive:
+    status_str = f"ALIVE to {alive_tickets_count} tickets. Alive to {next_race_alive_tickets} in next race."
+else:
+    status_str = "BUST"
     
 html_results_str = f'''
 <p style="text-align:center;margin-top:10px;margin-bottom:10px"><b>RESULTS:</b> {status_str} </p>
@@ -120,7 +131,7 @@ html_results_str = f'''
 <p style="text-align:center;margin-top:10px;margin-bottom:10px">5th race: <b>{winners_list[4]}</b> </p>
 '''     
         
-with open("test_json_file.json","w") as f:
+with open("./asset/wager-data.json","w") as f:
     f.write(final_file_string)
 
 with open("./index.html",'r') as f:
