@@ -20,7 +20,7 @@ with open(ticket_csv_filename,'r') as ticket_file:
 
 # this might be a error prone way to get race number
 #print(ticket_data[0])
-first_race_number = int(ticket_data[0].split(',')[-4]) # change this
+first_race_number = int(ticket_data[0].split(',')[-5]) # change this
 
 individual_tickets_list = [] # this will be a list of lists
 for line in ticket_data:
@@ -43,7 +43,7 @@ for ticket in individual_tickets_list:
             new_runners_list = old_runners_list + [runner]
             unique_runners_dict[key] = new_runners_list
             
-    flow_string = f"{{\"thru\": [\"R{i}#{ticket[0]}\",\"R{i+1}#{ticket[1]}\",\"R{i+2}#{ticket[2]}\",\"R{i+3}#{ticket[3]}\",\"R{i+4}#{ticket[4]}\"],\"value\": 1}},"
+    flow_string = f"{{\"thru\": [\"R1#{ticket[0]}\",\"R2#{ticket[1]}\",\"R3#{ticket[2]}\",\"R4#{ticket[3]}\",\"R5#{ticket[4]}\"],\"value\": 1}},"
     json_flow_strings_list.append(flow_string)
     
 for race in unique_runners_dict:
@@ -118,7 +118,7 @@ for ticket in individual_tickets_list:
         next_race_alive_tickets.append(int(ticket[(last_race-first_race_number+1)]))
 
 if alive:
-    status_str = f"ALIVE to {alive_tickets_count} tickets. Alive to {next_race_alive_tickets} in next race."
+    status_str = f"ALIVE to {alive_tickets_count} tickets. Alive to {list(set(next_race_alive_tickets))} in next race."
 else:
     status_str = "BUST"
     
