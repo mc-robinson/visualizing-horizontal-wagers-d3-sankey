@@ -11,6 +11,7 @@ Usage: python ticket-to-wager-data.py amwager_ticket_file.csv
 
 import sys
 import call_NYRA_API
+import os
 
 ticket_csv_filename = sys.argv[1]
 #ticket_csv_filename = '../wagercalcNN/STD2_betsNN_PK5_20180822_file.csv'
@@ -129,12 +130,14 @@ html_results_str = f'''
 <p style="text-align:center;margin-top:10px;margin-bottom:10px">3rd race: <b>{winners_list[2]}</b> </p>
 <p style="text-align:center;margin-top:10px;margin-bottom:10px">4th race: <b>{winners_list[3]}</b> </p>
 <p style="text-align:center;margin-top:10px;margin-bottom:10px">5th race: <b>{winners_list[4]}</b> </p>
-'''     
+''' 
+
+script_dir = os.path.dirname(os.path.realpath(__file__))   
         
-with open("./asset/wager-data.json","w") as f:
+with open(os.path.join(script_dir,"asset/wager-data.json"),"w") as f:
     f.write(final_file_string)
 
-with open("./index.html",'r') as f:
+with open(os.path.join(script_dir,"index.html"),'r') as f:
     html_data = f.readlines()
 
 num_tickets = len(individual_tickets_list)
@@ -146,5 +149,5 @@ for idx,line in enumerate(html_data):
     if 'RESULTS' in line:
         html_data[idx:idx+6] = html_results_str
 
-with open("./index.html",'w') as f:
+with open(os.path.join(script_dir,"index.html"),'w') as f:
     f.writelines(html_data)
